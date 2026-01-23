@@ -15,7 +15,6 @@ export const i18nKeys = {
   inputLabel: "jobVisualizer.input.label",
   inputPlaceholder: "jobVisualizer.input.placeholder",
   btnLinkTitle: "jobVisualizer.actions.link.title",
-  btnUploadTitle: "jobVisualizer.actions.upload.title",
   btnVisualize: "jobVisualizer.actions.visualize",
   recentTitle: "jobVisualizer.recent.title",
   recentViewAll: "jobVisualizer.recent.viewAll",
@@ -35,9 +34,8 @@ export const stringsEn: Record<string, string> = {
   [i18nKeys.headingSubtitle]:
     "Turn text-heavy descriptions into clear, high-performing visual assets in seconds.",
   [i18nKeys.inputLabel]: "Job Description Source",
-  [i18nKeys.inputPlaceholder]: "Paste your job description or LinkedIn URL here...",
+  [i18nKeys.inputPlaceholder]: "Paste your job description",
   [i18nKeys.btnLinkTitle]: "Paste LinkedIn link",
-  [i18nKeys.btnUploadTitle]: "Upload file",
   [i18nKeys.btnVisualize]: "Visualize & Analyze",
   [i18nKeys.recentTitle]: "Recent Visualizations",
   [i18nKeys.recentViewAll]: "View All",

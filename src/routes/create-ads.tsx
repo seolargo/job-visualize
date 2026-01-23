@@ -111,17 +111,7 @@ export default function WorkspacePage() {
 
               <div class="jv-cardFooter">
                 <div class="jv-footerLeft">
-                  <button class="jv-iconBtn" type="button" title={t(i18nKeys.btnLinkTitle)} data-i18n={i18nKeys.btnLinkTitle}>
-                    <span class="material-symbols-outlined">link</span>
-                  </button>
-                  <button
-                    class="jv-iconBtn"
-                    type="button"
-                    title={t(i18nKeys.btnUploadTitle)}
-                    data-i18n={i18nKeys.btnUploadTitle}
-                  >
-                    <span class="material-symbols-outlined">upload_file</span>
-                  </button>
+
                 </div>
 
                 <button class="jv-cta" type="button" onClick={onVisualize} data-i18n={i18nKeys.btnVisualize}>
