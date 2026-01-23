@@ -19,8 +19,6 @@ export default function ResultPage() {
               </div>
 
               <nav class="jv-nav">
-                <a class="jv-navItem jv-navItemActive" href="/">My Ads</a>
-                <a class="jv-navItem" href="#">Analytics</a>
                 <a class="jv-navItem" href="#">Brand Assets</a>
                 <a class="jv-navItem" href="#">Billing</a>
               </nav>

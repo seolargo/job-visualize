@@ -43,11 +43,6 @@ export default function WorkspacePage() {
               </a>
 
               <a class="jv-navItem" href="#">
-                <span class="material-symbols-outlined">bar_chart</span>
-                <span data-i18n={i18nKeys.navAnalytics}>{t(i18nKeys.navAnalytics)}</span>
-              </a>
-
-              <a class="jv-navItem" href="#">
                 <span class="material-symbols-outlined">palette</span>
                 <span data-i18n={i18nKeys.navBrandAssets}>{t(i18nKeys.navBrandAssets)}</span>
               </a>
