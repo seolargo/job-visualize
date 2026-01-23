@@ -31,8 +31,7 @@ export const stringsEn: Record<string, string> = {
   [i18nKeys.breadcrumbDashboard]: "Dashboard",
   [i18nKeys.breadcrumbWorkspace]: "Workspace",
   [i18nKeys.headingTitle]: "Transform Your Job Ads",
-  [i18nKeys.headingSubtitle]:
-    "Turn text-heavy descriptions into clear, high-performing visual assets in seconds.",
+  [i18nKeys.headingSubtitle]: "Turn text-heavy descriptions into clear, high-performing visual assets in seconds.",
   [i18nKeys.inputLabel]: "Job Description Source",
   [i18nKeys.inputPlaceholder]: "Paste your job description",
   [i18nKeys.btnLinkTitle]: "Paste LinkedIn link",

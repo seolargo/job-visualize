@@ -37,7 +37,7 @@ export default function WorkspacePage() {
             </div>
 
             <nav class="jv-nav">
-              <a class="jv-navItem jv-navItemActive" href="#">
+              <a class="jv-navItem" href="#">
                 <span class="material-symbols-outlined">work</span>
                 <span data-i18n={i18nKeys.navMyAds}>{t(i18nKeys.navMyAds)}</span>
               </a>
