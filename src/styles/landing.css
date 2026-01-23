@@ -1,0 +1,981 @@
+:root {
+  --primary: #13ec80;
+  --bg-light: #f6f8f7;
+  --bg-dark: #102219;
+
+  --text: #111814;
+  --text-inv: #ffffff;
+  --muted: #6b7280; /* tailwind gray-600 vibe */
+
+  --border: #dbe6e0;
+  --border-dark: #2a3342;
+
+  --panel: #ffffff;
+
+  --r-lg: 16px;
+  --r-md: 12px;
+  --r-sm: 10px;
+
+  --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.06);
+  --shadow-lg: 0 18px 50px rgba(16, 24, 40, 0.12);
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+}
+
+/* Root */
+.lj-root {
+  min-height: 100vh;
+  background: var(--bg-light);
+  color: var(--text);
+  transition: background-color 300ms ease, color 300ms ease;
+}
+
+/* Optional dark mode support (if you add html.dark later) */
+html.dark .lj-root {
+  background: var(--bg-dark);
+  color: var(--text-inv);
+}
+
+.lj-container {
+  max-width: 1120px; /* max-w-7xl vibe */
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Top nav */
+.lj-topNav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(255, 255, 255, 0.80);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+
+html.dark .lj-topNav {
+  background: rgba(16, 34, 25, 0.80);
+  border-bottom-color: #1f2a24;
+}
+
+.lj-topNavInner {
+  height: 64px;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.lj-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.lj-brandMark {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: var(--primary);
+  display: grid;
+  place-items: center;
+  color: var(--text);
+}
+
+.lj-brandName {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.lj-navLinks {
+  display: none;
+  gap: 32px;
+}
+
+.lj-navLinks a {
+  text-decoration: none;
+  color: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  transition: color 160ms ease;
+}
+
+.lj-navLinks a:hover { color: var(--primary); }
+
+@media (min-width: 768px) {
+  .lj-navLinks { display: flex; }
+}
+
+.lj-navActions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.lj-linkBtn {
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 900;
+  cursor: pointer;
+  padding: 8px 10px;
+  transition: color 160ms ease;
+}
+
+.lj-linkBtn:hover { color: var(--primary); }
+
+.lj-primaryBtn {
+  border: none;
+  background: var(--primary);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 900;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: box-shadow 160ms ease, transform 160ms ease;
+}
+
+.lj-primaryBtn:hover {
+  box-shadow: 0 18px 40px rgba(19, 236, 128, 0.18);
+}
+
+/* Hero */
+.lj-hero {
+  position: relative;
+  overflow: hidden;
+  padding: 80px 0 64px;
+}
+
+.lj-heroGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 44px;
+  align-items: center;
+}
+
+@media (min-width: 1024px) {
+  .lj-heroGrid {
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+  }
+}
+
+.lj-heroLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.lj-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  width: fit-content;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(19, 236, 128, 0.10);
+  border: 1px solid rgba(19, 236, 128, 0.20);
+  color: #0f8b4a;
+  font-size: 11px;
+  font-weight: 950;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.lj-ping { position: relative; width: 10px; height: 10px; display: inline-block; }
+.lj-pingPulse {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: var(--primary);
+  opacity: 0.6;
+  animation: lj-ping 1.2s ease-out infinite;
+}
+.lj-pingDot {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--primary);
+}
+
+@keyframes lj-ping {
+  0% { transform: scale(1); opacity: 0.75; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+
+.lj-h1 {
+  margin: 0;
+  font-size: 48px;
+  font-weight: 950;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+@media (min-width: 768px) {
+  .lj-h1 { font-size: 60px; }
+}
+
+.lj-h1Accent { color: var(--primary); }
+
+.lj-heroSubtitle {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--muted);
+  max-width: 620px;
+}
+
+html.dark .lj-heroSubtitle { color: rgba(255,255,255,0.65); }
+
+.lj-heroCtas {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+@media (min-width: 640px) {
+  .lj-heroCtas { flex-direction: row; }
+}
+
+.lj-ctaPrimary {
+  border: none;
+  background: var(--primary);
+  color: var(--text);
+  font-weight: 950;
+  font-size: 18px;
+  padding: 16px 22px;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: transform 140ms ease;
+}
+
+.lj-ctaPrimary:hover { transform: scale(1.02); }
+
+.lj-ctaSecondary {
+  border: 2px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  font-weight: 950;
+  font-size: 18px;
+  padding: 16px 22px;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: background-color 160ms ease;
+}
+
+.lj-ctaSecondary:hover { background: rgba(17, 24, 20, 0.03); }
+html.dark .lj-ctaSecondary { color: var(--text-inv); border-color: rgba(255,255,255,0.20); }
+html.dark .lj-ctaSecondary:hover { background: rgba(255,255,255,0.08); }
+
+/* Hero right mock */
+.lj-heroRight { display: grid; place-items: center; }
+.lj-heroMockOuter {
+  width: 100%;
+  max-width: 520px;
+  aspect-ratio: 1 / 1;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(19, 236, 128, 0.20), rgba(19, 236, 128, 0.00));
+  padding: 16px;
+  border: 1px solid rgba(19, 236, 128, 0.10);
+}
+
+.lj-heroMockInner {
+  width: 100%;
+  height: 100%;
+  border-radius: 14px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 24px 60px rgba(16, 24, 40, 0.12);
+  overflow: hidden;
+}
+
+html.dark .lj-heroMockInner {
+  background: rgba(17, 19, 24, 0.6);
+  border-color: rgba(255,255,255,0.10);
+}
+
+.lj-mockPad {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.lj-mockTopBar {
+  height: 32px;
+  width: 34%;
+  border-radius: 12px;
+  background: #f3f4f6;
+}
+
+html.dark .lj-mockTopBar { background: rgba(255,255,255,0.08); }
+
+.lj-mockTiles {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.lj-mockTile {
+  height: 90px;
+  border-radius: 12px;
+  background: #f3f4f6;
+}
+
+html.dark .lj-mockTile { background: rgba(255,255,255,0.08); }
+
+.lj-mockTilePrimary { background: rgba(19, 236, 128, 0.22); }
+
+.lj-mockDropzone {
+  height: 190px;
+  border-radius: 16px;
+  background: rgba(243, 244, 246, 0.55);
+  border: 2px dashed #e5e7eb;
+  display: grid;
+  place-items: center;
+}
+
+html.dark .lj-mockDropzone {
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.14);
+}
+
+.lj-mockDropzone .material-symbols-outlined {
+  font-size: 44px;
+  color: #9ca3af;
+}
+
+/* Social proof */
+.lj-socialProof {
+  padding: 48px 0;
+  background: #fff;
+  border-top: 1px solid #f3f4f6;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+html.dark .lj-socialProof {
+  background: rgba(17, 19, 24, 0.20);
+  border-top-color: rgba(255,255,255,0.08);
+  border-bottom-color: rgba(255,255,255,0.08);
+}
+
+.lj-socialTitle {
+  margin: 0 0 22px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  color: #9ca3af;
+}
+
+.lj-socialRow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 42px;
+  opacity: 0.55;
+  filter: grayscale(1);
+  transition: filter 200ms ease, opacity 200ms ease;
+}
+
+.lj-socialRow:hover {
+  filter: grayscale(0);
+  opacity: 0.85;
+}
+
+.lj-logoBlock {
+  height: 32px;
+  width: 128px;
+  border-radius: 6px;
+  background: #9ca3af;
+}
+
+/* Compare */
+.lj-compare {
+  padding: 96px 0;
+  background: var(--bg-light);
+}
+
+html.dark .lj-compare { background: var(--bg-dark); }
+
+.lj-compareHead {
+  text-align: center;
+  margin-bottom: 44px;
+}
+
+.lj-h2 {
+  margin: 0 0 12px;
+  font-size: 34px;
+  font-weight: 950;
+  letter-spacing: -0.02em;
+}
+
+@media (min-width: 768px) {
+  .lj-h2 { font-size: 42px; }
+}
+
+.lj-muted {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+html.dark .lj-muted { color: rgba(255,255,255,0.60); }
+
+.lj-compareGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 22px;
+}
+
+@media (min-width: 768px) {
+  .lj-compareGrid {
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+  }
+}
+
+.lj-compareLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 950;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.lj-beforeLabel { color: #6b7280; }
+.lj-afterLabel { color: var(--primary); }
+
+.lj-beforeCard {
+  margin-top: 12px;
+  padding: 30px;
+  border-radius: 18px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  box-shadow: var(--shadow-sm);
+  opacity: 0.60;
+}
+
+html.dark .lj-beforeCard {
+  background: rgba(17, 19, 24, 0.60);
+  border-color: rgba(255,255,255,0.10);
+}
+
+.lj-lines { display: grid; gap: 10px; }
+.lj-line {
+  height: 14px;
+  border-radius: 8px;
+  background: #e5e7eb;
+}
+
+html.dark .lj-line { background: rgba(255,255,255,0.08); }
+
+.lj-linesSub {
+  padding-top: 12px;
+  display: grid;
+  gap: 8px;
+}
+
+.lj-lineSm {
+  height: 10px;
+  border-radius: 8px;
+  background: #f3f4f6;
+}
+
+html.dark .lj-lineSm { background: rgba(255,255,255,0.06); }
+
+.w100 { width: 100%; }
+.w85 { width: 84%; }
+.w75 { width: 75%; }
+.w70 { width: 66%; }
+
+.lj-beforeNote {
+  margin: 22px 0 0;
+  font-size: 12px;
+  color: #9ca3af;
+  font-style: italic;
+  font-weight: 700;
+}
+
+.lj-afterCard {
+  margin-top: 12px;
+  padding: 30px;
+  border-radius: 18px;
+  background: #fff;
+  border: 2px solid var(--primary);
+  box-shadow: 0 22px 60px rgba(19, 236, 128, 0.14);
+  position: relative;
+  overflow: hidden;
+}
+
+html.dark .lj-afterCard {
+  background: rgba(17, 19, 24, 0.60);
+  border-color: rgba(19, 236, 128, 0.65);
+}
+
+.lj-afterStamp {
+  position: absolute;
+  right: 18px;
+  top: 10px;
+  opacity: 0.20;
+  color: var(--primary);
+}
+
+.lj-afterStamp .material-symbols-outlined { font-size: 40px; }
+
+.lj-afterTop {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.lj-afterIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(19, 236, 128, 0.18);
+  display: grid;
+  place-items: center;
+  color: #0f8b4a;
+}
+
+.lj-afterTitle {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 950;
+}
+
+.lj-afterMeta {
+  margin: 2px 0 0;
+  font-size: 12px;
+  font-weight: 950;
+  color: var(--primary);
+}
+
+.lj-afterTiles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.lj-afterTile {
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(19, 236, 128, 0.06);
+  border: 1px solid rgba(19, 236, 128, 0.10);
+}
+
+.lj-tileK {
+  margin: 0;
+  font-size: 10px;
+  font-weight: 950;
+  text-transform: uppercase;
+  color: #6b7280;
+}
+
+.lj-tileV {
+  margin: 4px 0 0;
+  font-size: 14px;
+  font-weight: 950;
+}
+
+.lj-fit { margin-top: 16px; }
+.lj-fitRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 950;
+}
+
+.lj-fitBar {
+  margin-top: 8px;
+  height: 8px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: #f3f4f6;
+}
+
+html.dark .lj-fitBar { background: rgba(255,255,255,0.08); }
+
+.lj-fitFill {
+  height: 100%;
+  background: var(--primary);
+}
+
+.lj-afterNote {
+  margin: 22px 0 0;
+  font-size: 12px;
+  color: var(--primary);
+  font-style: italic;
+  font-weight: 950;
+}
+
+/* Features */
+.lj-features { padding: 96px 0; background: #fff; }
+html.dark .lj-features { background: rgba(17, 19, 24, 0.20); }
+
+.lj-featHead { margin-bottom: 34px; }
+
+.lj-featGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+}
+
+@media (min-width: 768px) {
+  .lj-featGrid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+.lj-featCard {
+  padding: 28px;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background: transparent;
+  transition: border-color 160ms ease;
+}
+
+.lj-featCard:hover { border-color: rgba(19, 236, 128, 0.5); }
+
+html.dark .lj-featCard {
+  border-color: rgba(255,255,255,0.10);
+}
+
+.lj-featIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: rgba(19, 236, 128, 0.10);
+  display: grid;
+  place-items: center;
+  color: #0f8b4a;
+  margin-bottom: 16px;
+  transition: transform 160ms ease;
+}
+
+.lj-featCard:hover .lj-featIcon { transform: scale(1.10); }
+
+.lj-h3 {
+  margin: 0 0 10px;
+  font-size: 20px;
+  font-weight: 950;
+}
+
+/* Testimonial */
+.lj-testimonial { padding: 96px 0; background: var(--bg-light); }
+html.dark .lj-testimonial { background: var(--bg-dark); }
+
+.lj-testimonialInner {
+  text-align: center;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.lj-quoteIcon {
+  color: var(--primary);
+  font-size: 56px;
+  margin-bottom: 18px;
+}
+
+.lj-quote {
+  margin: 0 0 26px;
+  font-size: 26px;
+  font-weight: 900;
+  font-style: italic;
+  line-height: 1.45;
+}
+
+@media (min-width: 768px) {
+  .lj-quote { font-size: 34px; }
+}
+
+.lj-person {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.lj-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 999px;
+  background: #e5e7eb;
+}
+
+.lj-personName { margin: 0; font-size: 18px; font-weight: 950; }
+.lj-personRole { margin: 0; font-size: 14px; color: #6b7280; font-weight: 700; }
+html.dark .lj-personRole { color: rgba(255,255,255,0.60); }
+
+/* Pricing */
+.lj-pricing { padding: 96px 0; background: #fff; }
+html.dark .lj-pricing { background: rgba(17, 19, 24, 0.20); }
+
+.lj-pricingHead {
+  text-align: center;
+  margin-bottom: 34px;
+}
+
+.lj-pricingGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+}
+
+@media (min-width: 768px) {
+  .lj-pricingGrid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; }
+}
+
+.lj-priceCard {
+  padding: 28px;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  min-height: 420px;
+}
+
+html.dark .lj-priceCard { border-color: rgba(255,255,255,0.10); }
+
+.lj-priceCardPro {
+  border: 2px solid var(--primary);
+  background: rgba(19, 236, 128, 0.05);
+  box-shadow: 0 22px 60px rgba(19, 236, 128, 0.14);
+  position: relative;
+}
+
+.lj-mostPopular {
+  position: absolute;
+  left: 50%;
+  top: -14px;
+  transform: translateX(-50%);
+  background: var(--primary);
+  color: var(--text);
+  font-size: 10px;
+  font-weight: 950;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 6px 10px;
+  border-radius: 999px;
+}
+
+.lj-priceRow {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 6px 0 16px;
+}
+
+.lj-price {
+  font-size: 44px;
+  font-weight: 950;
+  letter-spacing: -0.02em;
+}
+
+.lj-per { color: #6b7280; font-weight: 700; }
+html.dark .lj-per { color: rgba(255,255,255,0.60); }
+
+.lj-bullets {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 18px;
+  display: grid;
+  gap: 12px;
+  flex: 1 1 auto;
+}
+
+.lj-bullets li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.lj-bullets .material-symbols-outlined {
+  color: var(--primary);
+  font-size: 20px;
+}
+
+.lj-bullets li.isMuted { color: #9ca3af; }
+
+.lj-outlineBtn {
+  width: 100%;
+  border: 2px solid #e5e7eb;
+  background: transparent;
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-weight: 950;
+  cursor: pointer;
+  transition: background-color 160ms ease;
+}
+
+.lj-outlineBtn:hover { background: rgba(17, 24, 20, 0.03); }
+html.dark .lj-outlineBtn { border-color: rgba(255,255,255,0.18); color: var(--text-inv); }
+html.dark .lj-outlineBtn:hover { background: rgba(255,255,255,0.08); }
+
+.lj-primaryBtnFull {
+  width: 100%;
+  border: none;
+  background: var(--primary);
+  color: var(--text);
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-weight: 950;
+  cursor: pointer;
+  transition: box-shadow 160ms ease;
+}
+
+.lj-primaryBtnFull:hover {
+  box-shadow: 0 18px 40px rgba(19, 236, 128, 0.22);
+}
+
+/* Final CTA */
+.lj-finalCta {
+  padding: 96px 0;
+  background: #111814;
+  color: #fff;
+}
+
+.lj-finalInner {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  align-items: center;
+  max-width: 820px;
+}
+
+.lj-finalTitle {
+  margin: 0;
+  font-size: 42px;
+  font-weight: 950;
+  letter-spacing: -0.02em;
+}
+
+@media (min-width: 768px) {
+  .lj-finalTitle { font-size: 52px; }
+}
+
+.lj-finalSubtitle {
+  margin: 0;
+  font-size: 18px;
+  color: rgba(255,255,255,0.65);
+  max-width: 720px;
+}
+
+.lj-finalBtn {
+  border: none;
+  background: var(--primary);
+  color: var(--text);
+  font-size: 20px;
+  font-weight: 950;
+  padding: 18px 26px;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.lj-finalBtn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 22px 60px rgba(19, 236, 128, 0.20);
+}
+
+.lj-finalNote {
+  margin: 0;
+  font-size: 12px;
+  color: rgba(255,255,255,0.55);
+  font-weight: 700;
+}
+
+/* Footer */
+.lj-footer {
+  padding: 48px 0;
+  background: #fff;
+  border-top: 1px solid #f3f4f6;
+}
+
+html.dark .lj-footer {
+  background: rgba(16, 34, 25, 0.80);
+  border-top-color: rgba(255,255,255,0.10);
+}
+
+.lj-footerInner {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@media (min-width: 768px) {
+  .lj-footerInner {
+    flex-direction: row;
+  }
+}
+
+.lj-footerBrand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.lj-footerMark {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: var(--primary);
+  display: grid;
+  place-items: center;
+  color: var(--text);
+}
+
+.lj-footerMark .material-symbols-outlined { font-size: 14px; }
+
+.lj-footerName {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 950;
+}
+
+.lj-footerLinks {
+  display: flex;
+  gap: 22px;
+  font-size: 14px;
+  font-weight: 800;
+  color: #6b7280;
+}
+
+.lj-footerLinks a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 160ms ease;
+}
+.lj-footerLinks a:hover { color: var(--primary); }
+
+.lj-footerCopy {
+  margin: 0;
+  font-size: 12px;
+  color: #9ca3af;
+  font-weight: 700;
+}
