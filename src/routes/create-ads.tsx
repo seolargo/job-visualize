@@ -1,99 +1,18 @@
 import { createSignal, For } from "solid-js";
 import "../styles/job-visualizer-workspace.css";
-
-type RecentItem = {
-  category: string;
-  title: string;
-  createdAt: string;
-  gradient: "blue" | "green" | "orange";
-  pattern: "cubes" | "carbon" | "grid";
-};
-
-const i18nKeys = {
-  brandTitle: "jobVisualizer.brand.title",
-  brandSubtitle: "jobVisualizer.brand.subtitle",
-  navMyAds: "jobVisualizer.nav.myAds",
-  navAnalytics: "jobVisualizer.nav.analytics",
-  navBrandAssets: "jobVisualizer.nav.brandAssets",
-  navBilling: "jobVisualizer.nav.billing",
-  navSettings: "jobVisualizer.nav.settings",
-  ctaNewAsset: "jobVisualizer.cta.newAsset",
-  breadcrumbDashboard: "jobVisualizer.breadcrumb.dashboard",
-  breadcrumbWorkspace: "jobVisualizer.breadcrumb.workspace",
-  headingTitle: "jobVisualizer.heading.title",
-  headingSubtitle: "jobVisualizer.heading.subtitle",
-  inputLabel: "jobVisualizer.input.label",
-  inputPlaceholder: "jobVisualizer.input.placeholder",
-  btnLinkTitle: "jobVisualizer.actions.link.title",
-  btnUploadTitle: "jobVisualizer.actions.upload.title",
-  btnVisualize: "jobVisualizer.actions.visualize",
-  recentTitle: "jobVisualizer.recent.title",
-  recentViewAll: "jobVisualizer.recent.viewAll",
-} as const;
-
-const stringsEn: Record<string, string> = {
-  [i18nKeys.brandTitle]: "Job Visualizer",
-  [i18nKeys.brandSubtitle]: "HR Workspace",
-  [i18nKeys.navMyAds]: "My Ads",
-  [i18nKeys.navAnalytics]: "Analytics",
-  [i18nKeys.navBrandAssets]: "Brand Assets",
-  [i18nKeys.navBilling]: "Billing",
-  [i18nKeys.navSettings]: "Settings",
-  [i18nKeys.ctaNewAsset]: "New Asset",
-  [i18nKeys.breadcrumbDashboard]: "Dashboard",
-  [i18nKeys.breadcrumbWorkspace]: "Workspace",
-  [i18nKeys.headingTitle]: "Transform Your Job Ads",
-  [i18nKeys.headingSubtitle]:
-    "Turn text-heavy descriptions into clear, high-performing visual assets in seconds.",
-  [i18nKeys.inputLabel]: "Job Description Source",
-  [i18nKeys.inputPlaceholder]: "Paste your job description or LinkedIn URL here...",
-  [i18nKeys.btnLinkTitle]: "Paste LinkedIn link",
-  [i18nKeys.btnUploadTitle]: "Upload file",
-  [i18nKeys.btnVisualize]: "Visualize & Analyze",
-  [i18nKeys.recentTitle]: "Recent Visualizations",
-  [i18nKeys.recentViewAll]: "View All",
-};
-
-function t(key: string) {
-  return stringsEn[key] ?? key;
-}
-
-const recentItems: RecentItem[] = [
-  {
-    category: "Software Engineer",
-    title: "Full Stack Developer - London",
-    createdAt: "Created 2h ago",
-    gradient: "blue",
-    pattern: "cubes",
-  },
-  {
-    category: "Marketing",
-    title: "Senior Product Marketer",
-    createdAt: "Created Yesterday",
-    gradient: "green",
-    pattern: "carbon",
-  },
-  {
-    category: "Design",
-    title: "UI/UX Designer - Remote",
-    createdAt: "Created 3 days ago",
-    gradient: "orange",
-    pattern: "grid",
-  },
-];
+import { i18nKeys, t, recentItems } from "~/common/translate";
 
 export default function WorkspacePage() {
   const [jobText, setJobText] = createSignal("");
 
   const onNewAsset = () => {
     setJobText("");
-    // focus textarea (optional) – id üzerinden:
+
     const el = document.getElementById("job-source") as HTMLTextAreaElement | null;
     el?.focus();
   };
 
   const onVisualize = () => {
-    // Şimdilik mock: console’a bas
     console.log("Job source:", jobText());
   };
 
