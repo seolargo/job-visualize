@@ -443,3 +443,776 @@ html.dark .jv-miniTitle { color: var(--text-inv); }
 }
 
 .jv-more { font-size: 18px; color: var(--muted); }
+
+/* ============================= */
+/* RESULT SCREEN */
+/* ============================= */
+
+.jv-resultGrid {
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  gap: 32px;
+}
+
+@media (max-width: 1000px) {
+  .jv-resultGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* LEFT */
+.jv-visualCard {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.jv-visualHero {
+  height: 160px;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  position: relative;
+}
+
+.jv-visualBody {
+  padding: 20px;
+}
+
+.jv-badge {
+  display: inline-block;
+  background: rgba(19, 91, 236, 0.12);
+  color: var(--primary);
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.jv-jobTitle {
+  margin: 12px 0;
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.jv-metaList {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 16px 0;
+  font-size: 14px;
+}
+
+.jv-metaList li {
+  margin-bottom: 6px;
+  color: var(--muted);
+}
+
+.jv-techStack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.jv-techStack span {
+  background: #eef2ff;
+  color: #1e40af;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.jv-resultActions {
+  margin-top: 16px;
+  display: flex;
+  gap: 12px;
+}
+
+.jv-secondaryBtn {
+  border: 1px solid var(--border);
+  background: transparent;
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+/* RIGHT */
+.jv-analysisCard,
+.jv-fitCard {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+}
+
+.jv-analysisCard {
+  margin-bottom: 20px;
+}
+
+.jv-meaningTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.jv-meaningTable td {
+  padding: 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.jv-meaningTable td:first-child {
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.jv-fitCard {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.jv-fitCard h4 {
+  margin-top: 0;
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.jv-fitCard ul {
+  padding-left: 18px;
+  margin: 0;
+}
+
+.jv-fitCard li {
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+/* ============================= */
+/* STITCH RESULT PAGE (EXTRAS)   */
+/* Top AppBar + Preview Layout   */
+/* ============================= */
+
+/* Top app bar */
+.jv-appbar {
+  height: 72px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+}
+
+html.dark .jv-appbar {
+  background: var(--panel-dark);
+  border-bottom-color: var(--border-dark);
+}
+
+.jv-appbarInner {
+  max-width: 1180px;
+  margin: 0 auto;
+  height: 72px;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.jv-appBrand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 220px;
+}
+
+.jv-appMark {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: rgba(19, 91, 236, 0.12);
+  display: grid;
+  place-items: center;
+}
+
+.jv-appMark svg,
+.jv-appMark .material-symbols-outlined {
+  font-size: 18px;
+  color: var(--primary);
+}
+
+.jv-appName {
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  font-size: 16px;
+  color: var(--text);
+}
+
+html.dark .jv-appName { color: var(--text-inv); }
+
+/* Top-right actions */
+.jv-appActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.jv-btn {
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--text);
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-weight: 900;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: transform 80ms ease, filter 160ms ease, background-color 160ms ease;
+}
+
+.jv-btn:hover { filter: brightness(0.98); }
+.jv-btn:active { transform: scale(0.98); }
+
+html.dark .jv-btn {
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--text-inv);
+  border-color: var(--border-dark);
+}
+
+.jv-btnPrimaryTop {
+  border-color: rgba(19, 91, 236, 0.28);
+  background: var(--primary);
+  color: #fff;
+  box-shadow: 0 14px 28px rgba(19, 91, 236, 0.20);
+}
+
+.jv-btnPrimaryTop:hover { filter: brightness(0.97); }
+
+.jv-btnIcon {
+  width: 18px;
+  height: 18px;
+  display: inline-grid;
+  place-items: center;
+}
+
+/* Page container (wider than workspace) */
+.jv-page {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 22px 24px 40px;
+}
+
+/* Breadcrumb line */
+.jv-crumbs {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--muted);
+  font-weight: 700;
+  margin: 8px 0 10px;
+}
+
+.jv-crumbs strong {
+  color: var(--text);
+  font-weight: 900;
+}
+
+html.dark .jv-crumbs strong { color: var(--text-inv); }
+
+.jv-pageTitle {
+  margin: 0;
+  font-size: 44px;
+  line-height: 1.08;
+  font-weight: 950;
+  letter-spacing: -0.03em;
+}
+
+.jv-pageDesc {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.6;
+  max-width: 760px;
+}
+
+/* Main grid (left preview + right panels) */
+.jv-previewGrid {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: 1.25fr 0.85fr;
+  gap: 22px;
+  align-items: start;
+}
+
+@media (max-width: 1050px) {
+  .jv-previewGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Shared panel card style for right side */
+.jv-panelCard {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+html.dark .jv-panelCard {
+  background: var(--panel-2-dark);
+  border-color: var(--border-dark);
+}
+
+/* ============================= */
+/* LEFT: Big Preview Card        */
+/* ============================= */
+
+.jv-previewCard {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+html.dark .jv-previewCard {
+  background: var(--panel-2-dark);
+  border-color: var(--border-dark);
+}
+
+.jv-previewHeader {
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid rgba(219, 223, 230, 0.6);
+}
+
+html.dark .jv-previewHeader {
+  border-bottom-color: rgba(42, 51, 66, 0.7);
+}
+
+.jv-previewLabel {
+  font-size: 12px;
+  letter-spacing: 0.10em;
+  font-weight: 950;
+  text-transform: uppercase;
+  color: #98a2b3; /* screenshot’te daha açık */
+}
+
+.jv-windowDots {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.jv-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.10);
+}
+
+.jv-dotRed { background: #ff5f57; }
+.jv-dotYellow { background: #febc2e; }
+.jv-dotGreen { background: #28c840; }
+
+.jv-previewCanvas {
+  position: relative;
+  height: 420px;
+  border-radius: 0;
+  overflow: hidden;
+  background: linear-gradient(135deg, #0b46c7 0%, #164fcf 55%, #0b3aa8 100%);
+}
+
+/* Huge soft circle on right (like screenshot) */
+.jv-previewCanvas::after {
+  content: "";
+  position: absolute;
+  right: -120px;
+  top: -40px;
+  width: 520px;
+  height: 520px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  filter: blur(0px);
+  transform: rotate(10deg);
+}
+
+/* Inner layout (optional: if you build the inner card content) */
+.jv-previewInner {
+  position: absolute;
+  inset: 0;
+  padding: 44px 46px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 1;
+}
+
+.jv-pillRow { display: flex; gap: 12px; }
+
+.jv-pill {
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.10);
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-weight: 950;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+}
+
+.jv-previewTitle {
+  margin: 0;
+  color: #fff;
+  font-weight: 950;
+  letter-spacing: -0.03em;
+  font-size: 58px;
+  line-height: 1.02;
+}
+
+@media (max-width: 1050px) {
+  .jv-previewCanvas { height: 380px; }
+  .jv-previewTitle { font-size: 48px; }
+}
+
+.jv-previewSub {
+  margin: 12px 0 0;
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 850;
+  font-size: 22px;
+}
+
+.jv-techIcons {
+  display: flex;
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.jv-techIcon {
+  width: 54px;
+  height: 54px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.18);
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-weight: 900;
+  font-size: 12px;
+}
+
+/* Bottom-right "Hiring at" badge */
+.jv-hiringBadge {
+  position: absolute;
+  right: 36px;
+  bottom: 34px;
+  width: 230px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 14px 30px rgba(0,0,0,0.18);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 2;
+}
+
+.jv-hiringIcon {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: rgba(19, 91, 236, 0.12);
+  color: var(--primary);
+  display: grid;
+  place-items: center;
+}
+
+.jv-hiringTextSmall {
+  font-size: 11px;
+  letter-spacing: 0.10em;
+  font-weight: 950;
+  color: #98a2b3;
+  text-transform: uppercase;
+}
+
+.jv-hiringTextBig {
+  font-size: 18px;
+  font-weight: 950;
+  color: #111318;
+  margin-top: 2px;
+}
+
+/* Regenerate bar (under preview) */
+.jv-regenerateBar {
+  margin-top: 14px;
+  background: rgba(19, 91, 236, 0.07);
+  border: 1px solid rgba(19, 91, 236, 0.20);
+  border-radius: 14px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.jv-regenerateLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--primary);
+  font-weight: 850;
+}
+
+.jv-regenerateLeft .material-symbols-outlined {
+  font-size: 18px;
+}
+
+.jv-regenerateBtn {
+  border: none;
+  background: var(--primary);
+  color: #fff;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-weight: 950;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  box-shadow: 0 14px 28px rgba(19, 91, 236, 0.18);
+  transition: transform 80ms ease, filter 160ms ease;
+}
+
+.jv-regenerateBtn:hover { filter: brightness(0.97); }
+.jv-regenerateBtn:active { transform: scale(0.98); }
+
+/* ============================= */
+/* RIGHT: Truth Translator Card  */
+/* ============================= */
+
+.jv-cardPad { padding: 16px 18px; }
+
+.jv-cardTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 950;
+  letter-spacing: 0.01em;
+}
+
+.jv-cardTitleRow .material-symbols-outlined {
+  color: var(--primary);
+}
+
+.jv-cardTitle {
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 950;
+}
+
+.jv-tabRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  margin-top: 14px;
+  border-top: 1px solid rgba(219, 223, 230, 0.7);
+}
+
+html.dark .jv-tabRow {
+  border-top-color: rgba(42, 51, 66, 0.7);
+}
+
+.jv-tab {
+  padding: 12px 12px;
+  font-size: 12px;
+  font-weight: 950;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: #98a2b3;
+}
+
+.jv-tabActive {
+  color: var(--primary);
+}
+
+.jv-truthRows {
+  border-top: 1px solid rgba(219, 223, 230, 0.7);
+}
+
+html.dark .jv-truthRows {
+  border-top-color: rgba(42, 51, 66, 0.7);
+}
+
+.jv-truthRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  padding: 16px 18px;
+  border-bottom: 1px solid rgba(219, 223, 230, 0.7);
+}
+
+html.dark .jv-truthRow {
+  border-bottom-color: rgba(42, 51, 66, 0.7);
+}
+
+.jv-truthLeft {
+  color: var(--muted);
+  font-weight: 800;
+  font-style: italic;
+}
+
+.jv-truthRight {
+  color: var(--text);
+  font-weight: 800;
+}
+
+html.dark .jv-truthRight { color: var(--text-inv); }
+
+/* ============================= */
+/* RIGHT: Candidate Matching     */
+/* ============================= */
+
+.jv-matchHeader {
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid rgba(219, 223, 230, 0.7);
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 13px;
+}
+
+html.dark .jv-matchHeader {
+  border-bottom-color: rgba(42, 51, 66, 0.7);
+}
+
+.jv-matchHeader .material-symbols-outlined {
+  color: var(--primary);
+}
+
+.jv-matchBody {
+  padding: 16px 18px 18px;
+}
+
+.jv-matchGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+@media (max-width: 1050px) {
+  .jv-matchGrid { grid-template-columns: 1fr; }
+}
+
+.jv-matchColTitle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 950;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+
+.jv-dotOk,
+.jv-dotNo {
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  color: #fff;
+  font-weight: 950;
+}
+
+.jv-dotOk { background: #12b76a; }
+.jv-dotNo { background: #f04438; }
+
+.jv-matchList {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.jv-matchItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 750;
+  color: var(--text);
+}
+
+html.dark .jv-matchItem { color: var(--text-inv); }
+
+.jv-miniBullet {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(19, 91, 236, 0.35);
+}
+
+.jv-miniBulletRed { background: rgba(240, 68, 56, 0.35); }
+
+/* ============================= */
+/* Bottom "Ready to post?" Toast */
+/* ============================= */
+
+.jv-toast {
+  margin-top: 18px;
+  background: #0b1220;
+  color: #fff;
+  border-radius: 14px;
+  padding: 18px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  box-shadow: 0 18px 50px rgba(16, 24, 40, 0.18);
+}
+
+.jv-toastTitle {
+  font-weight: 950;
+  font-size: 16px;
+  margin: 0;
+}
+
+.jv-toastDesc {
+  margin: 6px 0 0;
+  color: rgba(255,255,255,0.70);
+  font-weight: 750;
+  font-size: 13px;
+}
+
+.jv-toastIconBtn {
+  width: 54px;
+  height: 54px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  background: rgba(255,255,255,0.12);
+  display: grid;
+  place-items: center;
+  color: #fff;
+  transition: transform 80ms ease, filter 160ms ease;
+}
+
+.jv-toastIconBtn:hover { filter: brightness(1.05); }
+.jv-toastIconBtn:active { transform: scale(0.98); }
+
+/* Utility spacing for right column stack */
+.jv-rightStack {
+  display: grid;
+  gap: 18px;
+}
+
