@@ -1,3 +1,4 @@
+import { A } from "@solidjs/router";
 import { t, i18nKeys } from "~/common/translate";
 
 export function SidebarBottom(props: { onNewAsset: () => void }) {
@@ -7,10 +8,10 @@ export function SidebarBottom(props: { onNewAsset: () => void }) {
         {t(i18nKeys.ctaNewAsset)}
       </button>
 
-      <div class="jv-settingsRow" role="button" tabIndex={0}>
+      <A href="/settings" class="jv-settingsRow">
         <span class="material-symbols-outlined">settings</span>
         <span>{t(i18nKeys.navSettings)}</span>
-      </div>
+      </A>
     </div>
   );
 }
