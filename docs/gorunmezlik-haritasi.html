@@ -410,6 +410,62 @@
     border-radius: 4px;
   }
 
+  /* ---------- Synthesis: Görünmezlik Geometrisi ---------- */
+
+  .synthesis {
+    margin-top: 56px;
+    padding: 32px 36px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-top: 3px solid var(--accent);
+    border-radius: 10px;
+  }
+
+  .synthesis .eyebrow { margin-bottom: 10px; }
+
+  .synthesis h2 {
+    font-family: var(--font-mono);
+    font-size: 26px;
+    letter-spacing: -0.01em;
+    margin: 0 0 18px;
+    text-wrap: balance;
+  }
+
+  .synthesis p {
+    font-family: var(--font-serif);
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--ink-dim);
+    max-width: 66ch;
+    margin: 0 0 16px;
+  }
+
+  .synthesis p:last-of-type { margin-bottom: 0; }
+
+  .synthesis strong { color: var(--ink); }
+
+  .ref {
+    font-family: var(--font-mono);
+    font-size: 0.88em;
+    background: var(--code-bg);
+    color: var(--ink);
+    border-radius: 4px;
+    padding: 1px 6px;
+    white-space: nowrap;
+  }
+
+  .synthesis .metric {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--ink);
+    background: var(--accent-soft);
+    border-radius: 7px;
+    padding: 14px 16px;
+    max-width: none;
+  }
+
+  .synthesis .metric strong { color: var(--accent); font-size: 16px; }
+
   @media (prefers-reduced-motion: reduce) {
     * { transition-duration: 0.01ms !important; }
   }
@@ -433,6 +489,35 @@
     <nav class="legend" id="legend" aria-label="Kategoriye göre filtrele"></nav>
     <main class="findings" id="findings"></main>
   </div>
+
+  <section class="synthesis">
+    <p class="eyebrow">Sonuç · Tek Bir İlke</p>
+    <h2>Görünmezlik Geometrisi</h2>
+    <p>
+      Görünmeyen, yalnızca çıkarılan bir şey değil — aynı zamanda görüneni <strong>üreten</strong> şeydir.
+      İyi kurulmuş bir kod tabanında arayüzde görünen her davranış, kodda tek bir yerde yaşayan bir
+      yapıdan (bir state machine, bir veri modeli, hesaplanmış bir alan) türer; hiçbir yerde kopyalanmaz.
+    </p>
+    <p>
+      Bu kod tabanında bu geometri kısmen zaten kuruldu: <span class="ref">src/common/parseJob.ts</span>
+      ile <span class="ref">src/common/jobStore.ts</span>, ham bir ilan metnini tek bir temsile
+      (<span class="ref">ParsedJob</span>) indirgeyen tam da böyle bir geometri kurar —
+      <span class="ref">src/routes/result.tsx</span> bunu doğrudan tüketir, hiçbir alanı kendi başına
+      yeniden yazmaz.
+    </p>
+    <p>
+      Ama bu geometri yalnızca tek bir yüzeyde kullanılıyor. Kategori 03'te belirtilen dört bağımsız
+      <span class="ref">jobData</span> tanımının asıl anlamı şu: aynı "ilan → görsel" davranışı,
+      <span class="ref">src/routes/ai-analysis.tsx</span>, <span class="ref">src/routes/linkedin-analysis.tsx</span>
+      ve <span class="ref">src/routes/job-card-editor.tsx</span> içinde üç kez daha — geometriden
+      türetilerek değil, elle kopyalanarak — yeniden üretiliyor.
+    </p>
+    <p class="metric">
+      Ölçüt: "Maaş biçimini değiştirmek istersem kaç dosya değişmeli?" — Bugünün cevabı: <strong>4</strong>.
+      Geometri tek kaynaktan aksaydı cevap <strong>1</strong> olurdu. Bu kod tabanındaki en yüksek
+      kaldıraçlı tek mimari düzeltme, bu farkı kapatmaktır.
+    </p>
+  </section>
 
   <footer class="colophon">
     <p>
