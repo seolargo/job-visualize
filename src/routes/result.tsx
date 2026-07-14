@@ -1,6 +1,27 @@
+import { createMemo, For, Show } from "solid-js";
 import "../styles/job-visualizer-workspace.css";
+import { currentJob } from "~/common/jobStore";
+import type { ParsedJob } from "~/common/parseJob";
+
+const DEMO: ParsedJob = {
+  title: "Senior Frontend Engineer",
+  seniority: "Senior",
+  location: "Remote (EU)",
+  experience: "5–8 years",
+  salary: "€70k – €90k",
+  techStack: ["React", "TypeScript", "CSS", "REST"],
+  jargon: [
+    { phrase: "Fast-paced environment", meaning: "High workload & tight deadlines" },
+    { phrase: "Startup mentality", meaning: "Unclear boundaries & shifting priorities" },
+    { phrase: "Self-motivated", meaning: "Minimal guidance from management" },
+  ],
+  goodFit: ["You like autonomy", "You are comfortable with ambiguity", "You enjoy fast delivery cycles"],
+  notFit: ["You need strict role definitions", "You prefer low-pressure environments", "You expect close mentoring"],
+};
 
 export default function ResultPage() {
+  const job = createMemo<ParsedJob>(() => currentJob()?.parsed ?? DEMO);
+
   return (
     <div class="jv-root">
       <div class="jv-shell">
@@ -48,20 +69,25 @@ export default function ResultPage() {
                   </div>
 
                   <div class="jv-visualBody">
-                    <span class="jv-badge">Senior</span>
-                    <h3 class="jv-jobTitle">Senior Frontend Engineer</h3>
+                    <Show when={job().seniority}>
+                      <span class="jv-badge">{job().seniority}</span>
+                    </Show>
+                    <h3 class="jv-jobTitle">{job().title}</h3>
 
                     <ul class="jv-metaList">
-                      <li><strong>Location:</strong> Remote (EU)</li>
-                      <li><strong>Experience:</strong> 5–8 years</li>
-                      <li><strong>Salary:</strong> €70k – €90k</li>
+                      <Show when={job().location}>
+                        <li><strong>Location:</strong> {job().location}</li>
+                      </Show>
+                      <Show when={job().experience}>
+                        <li><strong>Experience:</strong> {job().experience}</li>
+                      </Show>
+                      <Show when={job().salary}>
+                        <li><strong>Salary:</strong> {job().salary}</li>
+                      </Show>
                     </ul>
 
                     <div class="jv-techStack">
-                      <span>React</span>
-                      <span>TypeScript</span>
-                      <span>CSS</span>
-                      <span>REST</span>
+                      <For each={job().techStack}>{(tech) => <span>{tech}</span>}</For>
                     </div>
                   </div>
                 </div>
@@ -84,40 +110,37 @@ export default function ResultPage() {
                 <div class="jv-analysisCard">
                   <h3 class="jv-h3">What This Job Really Means</h3>
 
-                  <table class="jv-meaningTable">
-                    <tbody>
-                      <tr>
-                        <td>Fast-paced environment</td>
-                        <td>High workload & tight deadlines</td>
-                      </tr>
-                      <tr>
-                        <td>Startup mentality</td>
-                        <td>Unclear boundaries & shifting priorities</td>
-                      </tr>
-                      <tr>
-                        <td>Self-motivated</td>
-                        <td>Minimal guidance from management</td>
-                      </tr>
-                    </tbody>
-                  </table>
+                  <Show
+                    when={job().jargon.length > 0}
+                    fallback={<p class="jv-muted">No corporate jargon detected in this posting.</p>}
+                  >
+                    <table class="jv-meaningTable">
+                      <tbody>
+                        <For each={job().jargon}>
+                          {(row) => (
+                            <tr>
+                              <td>{row.phrase}</td>
+                              <td>{row.meaning}</td>
+                            </tr>
+                          )}
+                        </For>
+                      </tbody>
+                    </table>
+                  </Show>
                 </div>
 
                 <div class="jv-fitCard">
                   <div>
                     <h4>Good Fit If</h4>
                     <ul>
-                      <li>You like autonomy</li>
-                      <li>You are comfortable with ambiguity</li>
-                      <li>You enjoy fast delivery cycles</li>
+                      <For each={job().goodFit}>{(item) => <li>{item}</li>}</For>
                     </ul>
                   </div>
 
                   <div>
                     <h4>Not a Fit If</h4>
                     <ul>
-                      <li>You need strict role definitions</li>
-                      <li>You prefer low-pressure environments</li>
-                      <li>You expect close mentoring</li>
+                      <For each={job().notFit}>{(item) => <li>{item}</li>}</For>
                     </ul>
                   </div>
                 </div>

@@ -1,13 +1,17 @@
 import { createSignal } from "solid-js";
+import { useNavigate } from "@solidjs/router";
 import "../styles/job-visualizer-workspace.css";
 import { JobInputCard } from "./WorkspacePage/JobInputCard";
 import { RecentSection } from "./WorkspacePage/RecentSection";
 import { Sidebar } from "./WorkspacePage/Sidebar/Sidebar";
 import { Topbar } from "./WorkspacePage/Topbar";
 import { WorkspaceHeading } from "./WorkspacePage/WorkspaceHeading";
+import { parseJobPosting } from "~/common/parseJob";
+import { setCurrentJob } from "~/common/jobStore";
 
 export default function WorkspacePage() {
   const [jobText, setJobText] = createSignal("");
+  const navigate = useNavigate();
 
   const onNewAsset = () => {
     setJobText("");
@@ -15,7 +19,10 @@ export default function WorkspacePage() {
   };
 
   const onVisualize = () => {
-    console.log("Job source:", jobText());
+    const raw = jobText();
+    if (!raw.trim()) return;
+    setCurrentJob({ raw, parsed: parseJobPosting(raw) });
+    navigate("/result");
   };
 
   return (
