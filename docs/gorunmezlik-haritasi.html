@@ -1,0 +1,718 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Görünmezlik Haritası — job-visualize</title>
+<style>
+  :root {
+    --bg: #eef0ee;
+    --surface: #ffffff;
+    --surface-2: #e4e7e4;
+    --ink: #14181a;
+    --ink-dim: #4c5658;
+    --ink-faint: #7c8688;
+    --line: #d7dbd8;
+    --accent: #b8500f;
+    --accent-ink: #ffffff;
+    --accent-soft: rgba(184, 80, 15, 0.1);
+    --code-bg: #e7e4da;
+
+    --c1: #8a5a12; /* varsayılanlar - altın */
+    --c2: #9a3f2f; /* yutulan hatalar - tuğla */
+    --c3: #0f766e; /* örtük bağımlılık - teal */
+    --c4: #2b5a94; /* sözleşmeler - mavi */
+    --c5: #6a4aa6; /* durum geçişleri - eflatun */
+    --c6: #a3466f; /* fallback - gül */
+    --c7: #5c7a3a; /* güven sınırı - zeytin */
+
+    --font-mono: ui-monospace, "SF Mono", "Cascadia Code", "JetBrains Mono", Menlo, Consolas, monospace;
+    --font-serif: Georgia, "Iowan Old Style", "Palatino Linotype", "Book Antiqua", serif;
+
+    color-scheme: light;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f1417;
+      --surface: #161c20;
+      --surface-2: #1c2327;
+      --ink: #e8ecec;
+      --ink-dim: #a3b0b2;
+      --ink-faint: #6c7a7c;
+      --line: #2a3338;
+      --accent: #ff8a4d;
+      --accent-ink: #14181a;
+      --accent-soft: rgba(255, 138, 77, 0.14);
+      --code-bg: #1c2327;
+
+      --c1: #d9a55c;
+      --c2: #c0685a;
+      --c3: #5ec8c0;
+      --c4: #7fa8d9;
+      --c5: #a389d4;
+      --c6: #d98cae;
+      --c7: #8fae6a;
+
+      color-scheme: dark;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #0f1417;
+    --surface: #161c20;
+    --surface-2: #1c2327;
+    --ink: #e8ecec;
+    --ink-dim: #a3b0b2;
+    --ink-faint: #6c7a7c;
+    --line: #2a3338;
+    --accent: #ff8a4d;
+    --accent-ink: #14181a;
+    --accent-soft: rgba(255, 138, 77, 0.14);
+    --code-bg: #1c2327;
+    --c1: #d9a55c; --c2: #c0685a; --c3: #5ec8c0; --c4: #7fa8d9; --c5: #a389d4; --c6: #d98cae; --c7: #8fae6a;
+    color-scheme: dark;
+  }
+
+  :root[data-theme="light"] {
+    --bg: #eef0ee;
+    --surface: #ffffff;
+    --surface-2: #e4e7e4;
+    --ink: #14181a;
+    --ink-dim: #4c5658;
+    --ink-faint: #7c8688;
+    --line: #d7dbd8;
+    --accent: #b8500f;
+    --accent-ink: #ffffff;
+    --accent-soft: rgba(184, 80, 15, 0.1);
+    --code-bg: #e7e4da;
+    --c1: #8a5a12; --c2: #9a3f2f; --c3: #0f766e; --c4: #2b5a94; --c5: #6a4aa6; --c6: #a3466f; --c7: #5c7a3a;
+    color-scheme: light;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+  }
+
+  body {
+    font-family: var(--font-serif);
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection { background: var(--accent-soft); color: var(--ink); }
+
+  .page {
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 56px 32px 96px;
+  }
+
+  /* ---------- Masthead ---------- */
+
+  .masthead { margin-bottom: 40px; }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin: 0 0 14px;
+  }
+
+  h1 {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: clamp(32px, 5vw, 52px);
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    margin: 0 0 16px;
+    text-wrap: balance;
+  }
+
+  .dek {
+    font-family: var(--font-serif);
+    font-size: 18px;
+    color: var(--ink-dim);
+    max-width: 62ch;
+    margin: 0 0 32px;
+    text-wrap: pretty;
+  }
+
+  .dek strong { color: var(--ink); font-weight: 600; }
+
+  /* Distribution bar — the "map" */
+
+  .distro {
+    display: flex;
+    width: 100%;
+    height: 30px;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+  }
+
+  .distro-seg {
+    position: relative;
+    min-width: 3px;
+    transition: filter 150ms ease;
+    cursor: pointer;
+  }
+
+  .distro-seg:hover { filter: brightness(1.12); }
+
+  .distro-seg[data-dim="1"] { filter: grayscale(0.6) opacity(0.35); }
+
+  .distro-key {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+    margin-top: 12px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--ink-faint);
+  }
+
+  .distro-key span { display: inline-flex; align-items: center; gap: 6px; }
+
+  .distro-key i {
+    width: 8px; height: 8px; border-radius: 2px; display: inline-block;
+  }
+
+  /* ---------- Layout ---------- */
+
+  .layout {
+    display: grid;
+    grid-template-columns: 230px minmax(0, 1fr);
+    gap: 48px;
+    align-items: start;
+  }
+
+  @media (max-width: 860px) {
+    .layout { grid-template-columns: 1fr; gap: 24px; }
+  }
+
+  /* ---------- Legend / filter rail ---------- */
+
+  .legend {
+    position: sticky;
+    top: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  @media (max-width: 860px) {
+    .legend {
+      position: static;
+      flex-direction: row;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      -ms-overflow-style: none;
+      scrollbar-width: thin;
+    }
+  }
+
+  .chip {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    text-align: left;
+    padding: 9px 12px;
+    border-radius: 7px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--ink-dim);
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    cursor: pointer;
+    transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 860px) {
+    .chip { width: auto; flex: 0 0 auto; }
+  }
+
+  .chip:hover { background: var(--surface); border-color: var(--line); color: var(--ink); }
+
+  .chip.active {
+    background: var(--surface);
+    border-color: var(--dot-color, var(--line));
+    color: var(--ink);
+  }
+
+  .chip .dot {
+    width: 9px; height: 9px; border-radius: 2px; flex: none;
+    background: var(--dot-color);
+  }
+
+  .chip .tag { color: var(--ink-faint); }
+  .chip .count {
+    margin-left: auto;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-faint);
+    background: var(--surface-2);
+    border-radius: 10px;
+    padding: 1px 7px;
+    font-size: 11px;
+  }
+
+  .legend-reset {
+    margin-top: 6px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    background: none;
+    border: 1px dashed var(--line);
+    color: var(--ink-faint);
+    padding: 8px 12px;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: color 120ms ease, border-color 120ms ease;
+  }
+
+  .legend-reset:hover { color: var(--accent); border-color: var(--accent); }
+  .legend-reset[hidden] { display: none; }
+
+  @media (max-width: 860px) {
+    .legend-reset { flex: 0 0 auto; margin-top: 0; }
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* ---------- Findings ---------- */
+
+  .findings { max-width: 720px; }
+
+  .cat-section { margin-bottom: 44px; }
+  .cat-section[hidden] { display: none; }
+
+  .cat-head {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 6px;
+  }
+
+  .cat-head .tag {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--cat-color);
+    font-weight: 700;
+  }
+
+  .cat-head h2 {
+    font-family: var(--font-mono);
+    font-size: 20px;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+
+  .cat-blurb {
+    color: var(--ink-faint);
+    font-size: 14.5px;
+    margin: 0 0 20px;
+    max-width: 58ch;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--cat-color);
+    border-radius: 8px;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+  }
+
+  .card-files {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .fileref {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    background: var(--code-bg);
+    color: var(--ink-dim);
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    padding: 4px 8px;
+    cursor: pointer;
+    transition: color 120ms ease, border-color 120ms ease;
+  }
+
+  .fileref:hover { color: var(--accent); border-color: var(--accent); }
+  .fileref.copied { color: var(--accent); border-color: var(--accent); }
+
+  .snippet {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--ink-faint);
+    background: var(--code-bg);
+    border-radius: 5px;
+    padding: 8px 10px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+    white-space: pre;
+  }
+
+  .card h3 {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 17px;
+    line-height: 1.35;
+    margin: 0 0 8px;
+    text-wrap: balance;
+  }
+
+  .card p {
+    margin: 0;
+    color: var(--ink-dim);
+    font-size: 15px;
+    line-height: 1.6;
+    max-width: 62ch;
+  }
+
+  .card p.why::before {
+    content: "Neden önemli: ";
+    color: var(--ink-faint);
+    font-style: italic;
+  }
+
+  /* ---------- Colophon ---------- */
+
+  .colophon {
+    margin-top: 64px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    color: var(--ink-faint);
+  }
+
+  .colophon code {
+    font-family: var(--font-mono);
+    background: var(--code-bg);
+    padding: 1px 5px;
+    border-radius: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition-duration: 0.01ms !important; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="masthead">
+    <p class="eyebrow">Kod Tabanı Denetimi</p>
+    <h1>Görünmezlik Haritası</h1>
+    <p class="dek">
+      <strong>job-visualize</strong> — davranışı yönlendiren ama okunmadan görünmeyen
+      <strong id="total-count">19</strong> karar noktasının haritası. Aşağıdaki şerit, bulguların
+      yedi kategoriye dağılımını gösterir; bir dilime tıklamak listeyi filtreler.
+    </p>
+    <div class="distro" id="distro"></div>
+    <div class="distro-key" id="distro-key"></div>
+  </header>
+
+  <div class="layout">
+    <nav class="legend" id="legend" aria-label="Kategoriye göre filtrele"></nav>
+    <main class="findings" id="findings"></main>
+  </div>
+
+  <footer class="colophon">
+    <p>
+      Bulguların tamamı kaynağın doğrudan okunması ve <code>grep</code> ile çapraz doğrulanmıştır —
+      hiçbir madde tahmine dayanmaz. Bir dosya:satır rozetine tıklamak referansı panoya kopyalar.
+    </p>
+  </footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var CATS = [
+    { id: 1, tag: "01", name: "Sessiz Varsayılanlar", color: "--c1",
+      blurb: "Hiçbir yerde yazılmayan ama koddan çıkarılabilen varsayılan davranışlar." },
+    { id: 2, tag: "02", name: "Yutulan Hatalar", color: "--c2",
+      blurb: "Hatanın loglanıp es geçildiği, çağırana hiç yansımadığı yerler." },
+    { id: 3, tag: "03", name: "Örtük Bağımlılıklar", color: "--c3",
+      blurb: "İki modülün import değil, ortak varsayım veya sıralama üzerinden bağlı olduğu yerler." },
+    { id: 4, tag: "04", name: "Dokümanlanmamış Sözleşmeler", color: "--c4",
+      blurb: "İmzadan anlaşılmayan ama davranışı belirleyen kurallar." },
+    { id: 5, tag: "05", name: "Görünmeyen Durum Geçişleri", color: "--c5",
+      blurb: "State'in ne zaman ve neden değiştiğinin kod okunmadan anlaşılamadığı noktalar." },
+    { id: 6, tag: "06", name: "Sessiz Fallback'ler", color: "--c6",
+      blurb: "Bir şey başarısız olunca kullanıcıya yansımadan devreye giren ikinci yollar." },
+    { id: 7, tag: "07", name: "Örtük Güven Sınırları", color: "--c7",
+      blurb: "Hangi katmanın hangi veriye 'doğrulanmış' diye güvendiğinin belirtilmediği noktalar." }
+  ];
+
+  var FINDINGS = [
+    { cat: 1, files: [{ p: "src/common/parseJob.ts", l: 49 }],
+      code: 'const firstLine = lines[0] ?? "Untitled Role";',
+      what: "Boş veya sadece boşluktan oluşan metin girilirse başlık sessizce \"Untitled Role\" olur.",
+      why: "Fonksiyon, çağıranın boş-string kontrolü yaptığı varsayımıyla yazılmış; bu varsayım olmadan çağrılırsa kullanıcı hiçbir uyarı almadan sahte bir başlıkla karşılaşır." },
+    { cat: 1, files: [{ p: "src/common/parseJob.ts", l: 54 }],
+      code: 'const title = firstLine.replace(...).trim() || "Untitled Role";',
+      what: "Başlık çıkarımı regex temizleme + boşsa ikinci bir varsayılana düşme şeklinde iki aşamalı sessiz bir zincir.",
+      why: "\"- Remote\" gibi sıra dışı bir ilk satırda kullanıcı beklemediği bir başlık görür; hata da uyarı da yoktur." },
+    { cat: 1, files: [{ p: "src/common/translate.tsx", l: 68 }, { p: "src/routes/landing.tsx", l: 100 }],
+      code: "return stringsEn[key] ?? key;",
+      what: "Çeviri anahtarı eksikse İngilizce metin yerine ham anahtar string'i (ör. jobVisualizer.brand.title) doğrudan ekrana basılır.",
+      why: "Anahtar yeniden adlandırılırken derleme hatası vermez; sessizce üründe çirkin bir teknik string görünür." },
+    { cat: 1, files: [{ p: "tailwind.config.js", l: 1 }, { p: "src/app.css", l: 1 }],
+      code: "@tailwind base; @tailwind components; @tailwind utilities;",
+      what: "Tailwind tam yapılandırılmış ve her istekte derleniyor ama hiçbir bileşen gerçek bir Tailwind utility class'ı kullanmıyor.",
+      why: "tailwind.config.js'teki özel renkleri (primary, background-dark) değiştirmek hiçbir görsel etki yaratmaz; bu ölü bağımlılık hiçbir yerde belirtilmemiş." },
+
+    { cat: 2, files: [{ p: "src/**/*.tsx, *.ts", l: 0 }],
+      code: "// grep -rn \"try\\\\|catch\\\\|ErrorBoundary\" src → 0 sonuç",
+      what: "Kod tabanının tamamında tek bir try/catch, ErrorBoundary veya console.error yok.",
+      why: "Beklenmeyen bir çalışma zamanı hatası oluşursa kullanıcıya hiçbir geri bildirim (toast, hata sayfası) gösterilmez; tek iz tarayıcı konsolundaki ham stack trace'tir." },
+    { cat: 2, files: [{ p: "src/routes/create-ads.tsx", l: 18 }],
+      code: 'document.getElementById("job-source")?.focus();',
+      what: "JobInputCard'daki textarea id'si değişir veya bulunamazsa, \"New Asset\" butonu hiçbir uyarı vermeden odaklamayı atlar.",
+      why: "Bileşen refactor edilirken bu bağlantı kırılırsa ne test ne konsol logu bunu yakalar; sessizce çalışmayan bir buton kalır." },
+
+    { cat: 3, files: [{ p: "src/routes/create-ads.tsx", l: 24 }, { p: "src/routes/result.tsx", l: 23 }, { p: "src/common/jobStore.ts", l: 6 }],
+      code: "setCurrentJob({ raw, parsed }); navigate(\"/result\");",
+      what: "İki route, prop veya router state değil, modül seviyesinde paylaşılan bir Solid signal üzerinden bağlı; set-then-navigate sırasının korunması gerektiği hiçbir yerde yazmıyor.",
+      why: "Bu iki satır ayrılırsa (ör. navigasyon async hale getirilirse) result.tsx eski veya boş state okur, hiçbir hata fırlamaz." },
+    { cat: 3, files: [{ p: "src/routes/WorkspacePage/Sidebar/SidebarBottom.tsx", l: 11 }],
+      code: '<A href="/settings">',
+      what: "Sidebar'daki \"Settings\" linki gerçek bir route'a işaret ediyor gibi görünüyor ama src/routes/settings.tsx hiç yazılmamış (curl ile doğrulandı: 404).",
+      why: "Kullanıcı tıkladığında sessizce 404 sayfasına düşer; bunu fark etmenin tek yolu route dosyalarını tek tek listelemektir." },
+    { cat: 3, files: [
+        { p: "src/routes/result.tsx", l: 1 },
+        { p: "src/routes/ai-analysis.tsx", l: 1 },
+        { p: "src/routes/linkedin-analysis.tsx", l: 85 },
+        { p: "src/routes/job-card-editor.tsx", l: 69 }
+      ],
+      code: "// dört ayrı jobData / job state tanımı, hiçbiri diğerini import etmiyor",
+      what: "Aynı kavramı (\"ilanı görselleştir\") temsil eden dört route, birbirinden tamamen izole kendi state'ini tutuyor; hiçbiri jobStore'u veya parseJob'u paylaşmıyor.",
+      why: "parseJob'a yeni bir alan eklendiğinde bu diğer üç sayfaya manuel taşınmadığı sürece dört farklı 'gerçek' sürüm sessizce birbirinden uzaklaşır." },
+
+    { cat: 4, files: [{ p: "src/common/parseJob.ts", l: 51 }],
+      code: "firstLine.match(/\\b(Senior|Junior|Lead|...)\\b/i)",
+      what: "Kıdem sadece metnin ilk satırından çıkarılıyor; geri kalan metin hiç taranmıyor.",
+      why: "Kıdem bilgisi ilanın ikinci satırında geçiyorsa rozet sessizce boş kalır, kullanıcı nedenini anlayamaz." },
+    { cat: 4, files: [{ p: "src/common/parseJob.ts", l: 33 }, { p: "src/common/parseJob.ts", l: 65 }],
+      code: "const TECH_KEYWORDS = [...40 sabit kelime...]",
+      what: "Teknoloji tespiti sabit ~40 kelimelik bir whitelist'e karşı yapılıyor; listede olmayan hiçbir teknoloji kartta görünmez.",
+      why: "Kullanıcı ilanı eksik görselleştirilmiş sanır ama parser'ın neyi tanıyıp neyi tanımadığına dair hiçbir gösterge yok." },
+    { cat: 4, files: [{ p: "src/common/parseJob.ts", l: 62 }],
+      code: "text.match(/[$€£]\\s?\\d[\\d,.]*\\s?[kK]?.../)",
+      what: "Maaş regex'i yalnızca para birimi simgesi rakama bitişikse eşleşiyor.",
+      why: "\"80.000 TL\" veya \"80k USD\" gibi yazımlarda maaş alanı sessizce hiç render edilmez (result.tsx'teki Show koşulu es geçilir)." },
+    { cat: 4, files: [{ p: "src/common/parseJob.ts", l: 66 }],
+      code: 'kw.replace(".", "\\\\.").replace("+", "\\\\+")',
+      what: "String.replace global bayrak olmadan çağrılıyor; anahtar kelimede birden fazla nokta veya artı varsa yalnızca ilki escape edilir.",
+      why: "Bugün mevcut kelimelerle (ör. C++) tesadüfen doğru çalışıyor; ileride çok noktalı bir kelime eklenirse regex sessizce bozulur." },
+    { cat: 4, files: [{ p: "src/routes/WorkspacePage/Sidebar/SidebarNav.tsx", l: 15 }],
+      code: '<a class="jv-navItem" href="#">',
+      what: "\"My Ads\", \"Brand Assets\", \"Billing\" linkleri görsel olarak gerçek navigasyon linkleriyle birebir aynı ama hiçbiri bir route'a gitmiyor.",
+      why: "Hangi linkin gerçek, hangisinin yer tutucu olduğunu anlamanın tek yolu her href değerine tek tek bakmaktır." },
+
+    { cat: 5, files: [{ p: "src/common/jobStore.ts", l: 6 }, { p: "src/routes/create-ads.tsx", l: 16 }],
+      code: "const [currentJob, setCurrentJob] = createSignal(null);",
+      what: "currentJob yalnızca onVisualize içinde set ediliyor; ne \"New Asset\" tıklanınca ne /result'tan ayrılınca hiç temizlenmiyor.",
+      why: "Kullanıcı yeni bir ilan yazmaya başlasa bile, /result'a tekrar gidilirse önceki ilanın sonucu gösterilmeye devam eder — 'bu eski bir sonuç' göstergesi yoktur." },
+    { cat: 5, files: [{ p: "src/common/jobStore.ts", l: 6 }],
+      code: "// SolidStart SSR + hydration sınırı",
+      what: "currentJob düz bir modül seviyesi signal olduğu için sunucu her istekte onu taze görür (her zaman null), client hydration sonrası yalnızca client-taraflı navigasyonlarda hayatta kalır.",
+      why: "Bu geçiş noktası SolidStart'ın render modelini bilmeden anlaşılamaz; 'neden bazen demo bazen gerçek veri görüyorum' sorusunun cevabı hiçbir yerde yazmıyor." },
+
+    { cat: 6, files: [{ p: "src/routes/result.tsx", l: 6 }, { p: "src/routes/result.tsx", l: 23 }],
+      code: "const job = createMemo(() => currentJob()?.parsed ?? DEMO);",
+      what: "currentJob set edilmeden /result'a gidilirse (doğrudan URL, sayfa yenileme, paylaşılan link), tamamen sahte ama gerçekçi bir 'Senior Frontend Engineer' kartı gerçek sonuçtan görsel olarak ayırt edilemez şekilde render edilir.",
+      why: "Bir kullanıcı linki paylaşırsa veya sayfayı yenilerse, kendi ilanının sonucu yerine sessizce demo veriyi gördüğünü fark etmeyebilir." },
+
+    { cat: 7, files: [{ p: "src/common/parseJob.ts", l: 1 }, { p: "src/routes/result.tsx", l: 75 }],
+      code: "{job().title} / {job().location} / ...",
+      what: "Kullanıcının yapıştırdığı ham metin hiçbir explicit sanitize adımından geçmeden regex'lere ve ardından doğrudan JSX interpolasyonuna veriliyor.",
+      why: "Güvenlik bugün tamamen Solid JSX'in varsayılan otomatik escape'ine dayanıyor; bu varsayım hiçbir yerde yazılı değil ve render yolu değişirse (ör. zengin metin desteği) fark edilmeden kırılabilir." },
+    { cat: 7, files: [{ p: "src/routes/create-ads.tsx", l: 22 }],
+      code: "if (!raw.trim()) return;",
+      what: "Girdi doğrulamasının tamamı bu tek satır; uzunluk sınırı veya biçim varsayımı (İngilizce, başlık ilk satırda) hiç yok.",
+      why: "Parser, gelen metnin gerçek bir iş ilanına benzediğine sessizce güveniyor; benzemediğinde hata değil, sadece anlamsız/boş bir kart üretir." }
+  ];
+
+  var findingsBySection = {};
+  FINDINGS.forEach(function (f) {
+    findingsBySection[f.cat] = findingsBySection[f.cat] || [];
+    findingsBySection[f.cat].push(f);
+  });
+
+  document.getElementById("total-count").textContent = FINDINGS.length;
+
+  // ---- Distribution bar ----
+  var distro = document.getElementById("distro");
+  var distroKey = document.getElementById("distro-key");
+
+  CATS.forEach(function (cat) {
+    var count = (findingsBySection[cat.id] || []).length;
+    var pct = (count / FINDINGS.length) * 100;
+
+    var seg = document.createElement("div");
+    seg.className = "distro-seg";
+    seg.style.width = pct + "%";
+    seg.style.background = "var(" + cat.color + ")";
+    seg.title = cat.tag + " · " + cat.name + " (" + count + ")";
+    seg.dataset.cat = cat.id;
+    seg.addEventListener("click", function () { setActive(cat.id); });
+    distro.appendChild(seg);
+
+    var key = document.createElement("span");
+    key.innerHTML = '<i style="background:var(' + cat.color + ')"></i>' + cat.tag + " " + cat.name + " (" + count + ")";
+    distroKey.appendChild(key);
+  });
+
+  // ---- Legend / filter chips ----
+  var legend = document.getElementById("legend");
+  var chips = {};
+
+  CATS.forEach(function (cat) {
+    var count = (findingsBySection[cat.id] || []).length;
+    var chip = document.createElement("button");
+    chip.type = "button";
+    chip.className = "chip";
+    chip.style.setProperty("--dot-color", "var(" + cat.color + ")");
+    chip.innerHTML =
+      '<span class="dot"></span>' +
+      '<span class="tag">' + cat.tag + "</span> " + cat.name +
+      '<span class="count">' + count + "</span>";
+    chip.addEventListener("click", function () {
+      setActive(activeCat === cat.id ? null : cat.id);
+    });
+    legend.appendChild(chip);
+    chips[cat.id] = chip;
+  });
+
+  var resetBtn = document.createElement("button");
+  resetBtn.type = "button";
+  resetBtn.className = "legend-reset";
+  resetBtn.id = "reset";
+  resetBtn.textContent = "Tümünü göster";
+  resetBtn.hidden = true;
+  resetBtn.addEventListener("click", function () { setActive(null); });
+  legend.appendChild(resetBtn);
+
+  // ---- Findings sections ----
+  var findingsRoot = document.getElementById("findings");
+  var sections = {};
+
+  CATS.forEach(function (cat) {
+    var items = findingsBySection[cat.id] || [];
+    var section = document.createElement("section");
+    section.className = "cat-section";
+    section.dataset.cat = cat.id;
+    section.style.setProperty("--cat-color", "var(" + cat.color + ")");
+
+    var head = document.createElement("div");
+    head.className = "cat-head";
+    head.innerHTML = '<span class="tag">' + cat.tag + "</span><h2>" + cat.name + "</h2>";
+    section.appendChild(head);
+
+    var blurb = document.createElement("p");
+    blurb.className = "cat-blurb";
+    blurb.textContent = cat.blurb;
+    section.appendChild(blurb);
+
+    items.forEach(function (f) {
+      var card = document.createElement("article");
+      card.className = "card";
+
+      var filesRow = document.createElement("div");
+      filesRow.className = "card-files";
+      f.files.forEach(function (fl) {
+        var ref = document.createElement("button");
+        ref.type = "button";
+        ref.className = "fileref";
+        var label = fl.l > 0 ? fl.p + ":" + fl.l : fl.p;
+        ref.textContent = label;
+        ref.addEventListener("click", function () { copyRef(ref, label); });
+        filesRow.appendChild(ref);
+      });
+      card.appendChild(filesRow);
+
+      var snippet = document.createElement("code");
+      snippet.className = "snippet";
+      snippet.textContent = f.code;
+      card.appendChild(snippet);
+
+      var what = document.createElement("h3");
+      what.textContent = f.what;
+      card.appendChild(what);
+
+      var why = document.createElement("p");
+      why.className = "why";
+      why.textContent = f.why;
+      card.appendChild(why);
+
+      section.appendChild(card);
+    });
+
+    findingsRoot.appendChild(section);
+    sections[cat.id] = section;
+  });
+
+  // ---- Filter state ----
+  var activeCat = null;
+
+  function setActive(catId) {
+    activeCat = catId;
+    resetBtn.hidden = !catId;
+
+    Object.keys(chips).forEach(function (id) {
+      chips[id].classList.toggle("active", Number(id) === catId);
+    });
+
+    Object.keys(sections).forEach(function (id) {
+      sections[id].hidden = !!catId && Number(id) !== catId;
+    });
+
+    Array.prototype.forEach.call(distro.children, function (seg) {
+      seg.dataset.dim = catId && Number(seg.dataset.cat) !== catId ? "1" : "0";
+    });
+  }
+
+  // ---- Copy to clipboard ----
+  function copyRef(btn, text) {
+    var original = btn.textContent;
+    function flash(label, ok) {
+      btn.textContent = label;
+      btn.classList.toggle("copied", ok);
+      setTimeout(function () {
+        btn.textContent = original;
+        btn.classList.remove("copied");
+      }, 1100);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(
+        function () { flash("Kopyalandı", true); },
+        function () { flash("Kopyalanamadı", false); }
+      );
+    } else {
+      flash("Kopyalanamadı", false);
+    }
+  }
+})();
+</script>
+</body>
+</html>
